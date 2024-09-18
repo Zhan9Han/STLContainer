@@ -3,22 +3,24 @@
 #include<iostream>
 template<typename T>
 class Vector{
-
 private:
 
-    T* elements;
+    T* elements;                                //A pointer point to first element of Vector
 
-    size_t capacity;
+    size_t capacity;                            //Maximum quantity of elements that can be contained by current Vector
 
-    size_t size;
+    size_t size;                                //Current quantity of elements in Vector, size <= capacity
 
-    void reserve(size_t newCapacity)
+    void reserve(size_t newCapacity)            //Change capacity, usually larger 
     {
-        if(newCapacity == capacity) return;
+        if(newCapacity == capacity)             //Do nothing
+        {
+            return;
+        }
 
-        T* newElements = new T[newCapacity];
+        T* newElements = new T[newCapacity];    //Allocate a new place, then copy elements to new place in codes below
 
-        if(newCapacity >= size)
+        if(newCapacity >= size)                 //All of current elements can be copy to new place
         {
             std::copy(elements, elements + size, newElements);
             delete [] elements;
@@ -26,7 +28,7 @@ private:
             capacity = newCapacity;
         }
 
-        else
+        else                                    //Remove some elements due to smaller capacity 
         {
             std::copy(elements, elements + newCapacity, newElements);
             delete [] elements;
@@ -52,7 +54,7 @@ public:
         std::copy(other.elements, other.elements + size, elements);
     }
 
-    Vector& operator=(const Vector& other)
+    Vector& operator = (const Vector& other)      //Copy
     {
         if(this != &other)
         {
@@ -66,7 +68,7 @@ public:
         return *this;
     }
 
-    T& operator[](size_t index)
+    T& operator[](size_t index)                     //Visit elements by index
     {
         if(index >= size)
         {
@@ -76,7 +78,7 @@ public:
         return elements[index];
     }
 
-    const T& operator[](size_t index) const
+    const T& operator[](size_t index) const         //Maybe user need a const type return value, provide a const version
     {
         if(index >= size)
         {
@@ -96,12 +98,12 @@ public:
         return capacity;
     }
 
-    T* begin()
+    T* begin()                                      //Visit elements by pointer(iterator)
     {
         return elements;
     }
 
-    T* end()
+    T* end()                                        //The pointer point to the place behind last element of current Vector
     {
         return elements + size;
     }
@@ -116,7 +118,7 @@ public:
         return elements + size;
     }
 
-    void push_back(const T &val)
+    void push_back(const T &val)                    //Notice: when size is equal to capacity we need to increase the capacity
     {
         if(size == capacity) 
         {
@@ -126,7 +128,7 @@ public:
         elements[size++] = val;
     }
 
-    void pop_back()
+    void pop_back()                                 //Notice the bound
     {
         if(size-- == 0)
         {
@@ -134,7 +136,7 @@ public:
         }
     }
 
-    const T& back()
+    const T& back()                                 //Notice the bound
     {
         if(size == 0)
         {
@@ -144,7 +146,7 @@ public:
         return elements[size - 1];
     }
 
-    void insert(const T& val, size_t index)
+    void insert(const T& val, size_t index)         //Notice: 1.when the index is out of range; 2.when the capacity need to increase
     {
         if(index > size)
         {
@@ -180,7 +182,7 @@ public:
         --size;
     }
 
-    void resize(size_t newSize)
+    void resize(size_t newSize)                     //Notice: Sometimes capacity is not enough
     {
         if(newSize <= size)
         {
@@ -217,11 +219,11 @@ public:
             os << vec.elements[vec.size - 1];
         }
         return os;
-    }
+    }                                               //By overloading the operator << we can use std::cout << Vector to print all elements in main function
 
 };
 
-int main(){
+int main(){                                         //Some test
     Vector<int> vec;
     std::cout<<"push_back test"<<std::endl;
     for(int i = 0; i < 10; i++){
@@ -253,6 +255,5 @@ int main(){
     vec.resize(20);
     std::cout<<vec<<std::endl;
 
-    vec[21];
     return 0;
 }
